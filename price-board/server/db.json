@@ -1,0 +1,35 @@
+{
+    "commodities": [
+      {
+        "id": 0,
+        "start_price": 4.35,
+        "end_price": 3.28,
+        "trend": false
+      },
+      {
+        "id": 0,
+        "start_price": 1.35,
+        "end_price": 3.28,
+        "trend": true
+      },
+      {
+        "id": 0,
+        "start_price": 4.25,
+        "end_price": 8.68,
+        "trend": true
+      },
+      {
+        "id": 0,
+        "start_price": 4.35,
+        "end_price": 5.48,
+        "trend": true
+      },
+      {
+        "id": 0,
+        "start_price": 3.35,
+        "end_price": 3.27,
+        "trend": false
+      }
+    ]
+  }
+  
