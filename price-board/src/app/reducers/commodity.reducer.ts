@@ -28,15 +28,30 @@ const newState = (state: Commodity, newData: object) => {
 
 export const commodityReducer = createReducer(
     defaultState,
-    on(EditStart, 
-        (state, { id, start_price }) => ({
-        ...state
-    })),
-    on(EditEnd, 
-        (state, { id, end_price }) => ({
-        ...state
-    })),
-    on(Randomize, (state, {id, start_price, end_price}) => ({
-        ...state
-    }))
+    // on(EditStart, 
+    //     (state, { id, start_price }) => {
+    //         console.log('state',state)
+    //         // const newArr = state.commodities.map(el => {
+    //         //     if (el.id === id) {
+    //         //         return {
+    //         //             ...el,
+    //         //             start_price 
+    //         //         }
+    //         //     }
+    //         //     return el
+    //         // })
+
+    //         return {
+    //     ...state
+    // }}
+    
+    
+    // ),
+    // on(EditEnd, 
+    //     (state, { id, end_price }) => ({
+    //     ...state
+    // })),
+    // on(Randomize, (state, {id, start_price, end_price}) => ({
+    //     ...state
+    // }))
 )

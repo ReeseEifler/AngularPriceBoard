@@ -1,9 +1,16 @@
 import { createAction, props } from '@ngrx/store'
+import { Commodity } from 'src/app/models/commodity.model'
 
 export const EDIT_START = '[Commodity] EditStart'
 export const EDIT_END = '[Commodity] EditEnd'
 export const RANDOMIZE = '[Commodity] Randomize'
 export const LOAD_DATA = '[Commodity] Load Data'
+export const POPULATE = '[Commodity] Populate'
+
+export const Populate = createAction(
+    POPULATE,
+    props<{commodities: Array<Commodity>}>()
+)
 
 export const EditStart = createAction(
     EDIT_START,

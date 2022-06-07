@@ -5,6 +5,13 @@
     class="ag-theme-alpine"
     [rowData]="rowData"
     [columnDefs]="columnDefs"
-    (cellValueChanged)='onCellValueChanged($event)'>
+    
+    (cellValueChanged)='onCellValueChanged($event)'
+    
+    (cellDoubleClicked)='onCellDoubleClicked($event)'>
 </ag-grid-angular>
 
+<!-- (cellValueChanged)='onCellValueChanged($event)' -->
+<!-- (cellEditRequest)='onCellEditRequest($event)'-->
+<!--[onCellEditRequest]="onCellEditRequest"-->
+<!--[readOnlyEdit]="readOnlyEdit"-->

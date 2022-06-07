@@ -1,13 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { CellClassRules, ColDef, Grid, GridOptions } from 'ag-grid-community'
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Component, OnInit } from '@angular/core'
+import { CellClassRules, ColDef, Grid, GridApi, GridOptions, CellEditRequestEvent } from 'ag-grid-community'
+import { Store } from '@ngrx/store'
+import { Observable } from 'rxjs'
 import { Commodity } from 'src/app/models/commodity.model'
-import { EditStart, EditEnd, Randomize } from 'src/app/actions/commodity.actions'
-//import { HttpParams } from '@angular/common/http'
-import { getInitialData } from '../../utils/backend'
-import * as data from '../../utils/_DATA.json'
-
+import { Populate, EditStart, EditEnd, Randomize } from 'src/app/actions/commodity.actions'
 import { HttpClient } from '@angular/common/http'
 
 
@@ -27,14 +23,22 @@ const trendCellClassRules: CellClassRules = {
   styleUrls: ['./commodities-list.component.css']
 })
 export class CommoditiesListComponent  {
+  private gridApi!: GridApi
+  clickedPrice: number = 0
   commodities: any = []
-
 
   rowData: any[] = []
   columnDefs: ColDef[] = [
     { headerName:'ID', field:'id' },
-    { headerName:'Start Price', field:'start_price', editable: true },
-    { headerName:'End Price', field:'end_price', editable: true },
+    { headerName:'Start Price', field:'start_price', editable: true, 
+    valueParser: params => Number(params.newValue),
+    valueSetter: params => {
+      console.log('params', params)
+      return true
+    }
+  },
+    { headerName:'End Price', field:'end_price', editable: true,
+    valueParser: params => Number(params.newValue) },
     { headerName: 'Trend',
       field: 'trend',
       cellStyle: (params) => {
@@ -43,14 +47,33 @@ export class CommoditiesListComponent  {
       }
     },
   ]
-//(cellValueChanged)='onCellValueChanged($event)'
-  onCellValueChanged(event: any) {
-    if ((typeof event.data.start_price) === 'string') {
-      console.log(event.data.start_price, parseFloat(event.data.start_price).toFixed(2))
+  //readOnlyEdit: boolean = true
 
-
-      this.editStart(event.data.start_price)
+  onCellDoubleClicked(event:any) {
+    console.log(event)
+    const field = event.colDef.field
+    if (field === 'start_price') {23
+      this.clickedPrice = event.data.start_price
     }
+    else if (field === 'end_price') {
+      this.clickedPrice = event.data.end_price
+    }
+  }
+
+  onCellValueChanged(event: any) {
+    console.log(event)
+    if (event.colDef.field === 'start_price') {
+      const num = event.data.start_price
+      console.log('start is',event.data.start_price)
+      if (isNaN(num)) {
+        // revert to original value
+        console.log("revert to original value")
+      } else this.editStart(event.data.id, event.data.start_price)
+    }
+  }
+
+  setValue(id: string, value: number) {
+    (document.querySelector(id) as any).value = value;
   }
 
   getRandom() {
@@ -64,9 +87,9 @@ export class CommoditiesListComponent  {
     
    }
 
-   editStart(start_price: string) {
+   editStart(id: number, start_price: number) {
      console.log('edit start')
-     this.store.dispatch(EditStart({id:3, start_price:3.45}))
+     this.store.dispatch(EditStart({id, start_price}))
    }
 
    editEnd() {
@@ -108,8 +131,9 @@ export class CommoditiesListComponent  {
     this.http.get('http://localhost:3000/commodities').subscribe((commodities: any) => {
       this.rowData = commodities
       this.setTrends()
+      this.store.dispatch(Populate({commodities}))
     })
-    this.changeRandom()
+    // this.changeRandom()
   }
 
 }

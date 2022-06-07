@@ -7,6 +7,7 @@ import { CommoditiesListComponent } from './components/commodities-list/commodit
 import { StoreModule } from '@ngrx/store';
 import { simpleReducer } from './reducers/simple.reducer';
 import { commodityReducer } from './reducers/commodity.reducer'
+import { commoditiesListReducer } from './reducers/commodities-list.reducer'
 import { CommodityComponent } from './components/commodity/commodity.component';
 
 @NgModule({
@@ -20,8 +21,9 @@ import { CommodityComponent } from './components/commodity/commodity.component';
     HttpClientModule,
     AgGridModule,
     StoreModule.forRoot({ 
-      commodity: commodityReducer,
-      message: simpleReducer 
+      commodities: commoditiesListReducer,
+      //commodity: commodityReducer,
+      //message: simpleReducer 
     })
   ],
   providers: [],
