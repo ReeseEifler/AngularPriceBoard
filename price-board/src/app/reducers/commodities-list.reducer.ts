@@ -21,16 +21,39 @@ export const commoditiesListReducer = createReducer(
     defaultState,
     on(Populate,
         (state, {commodities}) => {
-            console.log('populate with', commodities)
-            return commodities
+            console.log('populate with', {...commodities})
+            return {...commodities}
         }
     ),
     on(EditStart, 
         (state, { id, start_price }) => {
-            console.log('state',state)
+            console.log('id is',id,start_price)
+            console.log('state',{
+                ...state,
+                [id]: {
+                    id,
+                    start_price,
+                    end_price: state[id].end_price,
+                    trend: start_price > state[id].end_price ? false : true
+                }
+                })
+            let newState = state
+            const end_price = state[id].end_price
+            // newState[id] = {
+            //     id,
+            //     start_price,
+            //     end_price,
+            // }
             return {
-        ...state
-    }}
+        ...state,
+        [id]: {
+            id,
+            start_price,
+            end_price,
+            trend: start_price > end_price ? false : true
+        }
+        }
+    }
     
     
     ),

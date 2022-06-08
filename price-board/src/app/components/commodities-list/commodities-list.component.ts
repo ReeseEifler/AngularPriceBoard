@@ -32,9 +32,14 @@ export class CommoditiesListComponent  {
     { headerName:'ID', field:'id' },
     { headerName:'Start Price', field:'start_price', editable: true, 
     valueParser: params => Number(params.newValue),
+    // valueGetter: params => {
+    //   return params.data.start_price
+    // },
     valueSetter: params => {
       console.log('params', params)
-      return true
+      const start_price = params.data.start_price
+      this.editStart(params.data.id, params.newValue)
+      return false
     }
   },
     { headerName:'End Price', field:'end_price', editable: true,
