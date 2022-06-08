@@ -41,7 +41,7 @@ export class CommoditiesListComponent  {
     valueSetter: params => {
       this.updateRow(params.data.id, params.data.start_price, params.newValue)
       this.editing = false
-    this.changeRandom()
+      this.changeRandom()
       return false
     } 
   },
@@ -64,12 +64,6 @@ export class CommoditiesListComponent  {
 
   onCellClicked() {
     this.editing = true
-  }
-
-  onCellValueChanged() {
-    console.log('CHANGE')
-    this.editing = false
-    this.changeRandom()
   }
 
   setTrends() {
