@@ -25,25 +25,32 @@ const trendCellClassRules: CellClassRules = {
 export class CommoditiesListComponent  {
   private gridApi!: GridApi
   clickedPrice: number = 0
-  commodities: any = []
+  commodities: any = {}/*[]*/
 
   rowData: any[] = []
   columnDefs: ColDef[] = [
     { headerName:'ID', field:'id' },
     { headerName:'Start Price', field:'start_price', editable: true, 
     valueParser: params => Number(params.newValue),
-    // valueGetter: params => {
-    //   return params.data.start_price
-    // },
+    valueGetter: params => {
+      console.log(params)
+      return params.data.start_price
+    },
     valueSetter: params => {
-      console.log('params', params)
-      const start_price = params.data.start_price
       this.editStart(params.data.id, params.newValue)
       return false
     }
   },
     { headerName:'End Price', field:'end_price', editable: true,
-    valueParser: params => Number(params.newValue) },
+    valueParser: params => Number(params.newValue),
+    // valueGetter: params => {
+    //   return params.data.start_price
+    // },
+    valueSetter: params => {
+      this.editEnd(params.data.id, params.newValue)
+      return false
+    } 
+  },
     { headerName: 'Trend',
       field: 'trend',
       cellStyle: (params) => {
@@ -52,7 +59,11 @@ export class CommoditiesListComponent  {
       }
     },
   ]
-  //readOnlyEdit: boolean = true
+  // readOnlyEdit: boolean = true
+
+  onGridReady(event: any) {
+    console.log('event',event)
+  }
 
   onCellDoubleClicked(event:any) {
     console.log(event)
@@ -66,14 +77,16 @@ export class CommoditiesListComponent  {
   }
 
   onCellValueChanged(event: any) {
-    console.log(event)
+    console.log('change value',event)
     if (event.colDef.field === 'start_price') {
       const num = event.data.start_price
       console.log('start is',event.data.start_price)
-      if (isNaN(num)) {
-        // revert to original value
-        console.log("revert to original value")
-      } else this.editStart(event.data.id, event.data.start_price)
+      // if (isNaN(num)) {
+      //   // revert to original value
+      //   console.log("revert to original value")
+      // } else this.editStart(event.data.id, event.data.start_price)
+    }else{
+      console.log('2nd is',event.data.end_price)
     }
   }
 
@@ -85,25 +98,21 @@ export class CommoditiesListComponent  {
     return parseFloat((Math.random() * 100).toFixed(2))
   }
 
-  commodities$: Observable<Array<Commodity>>
+  commodities$: Observable<object>
   
   constructor(private store: Store<BoardState>, private http: HttpClient) {
     this.commodities$ = this.store.select('commodities')
-    
    }
 
    editStart(id: number, start_price: number) {
      console.log('edit start')
      this.store.dispatch(EditStart({id, start_price}))
-   }
+    }
 
-   editEnd() {
-    this.store.dispatch(EditEnd({id:55, end_price: 3.21}))
-  }
-
-   randomMessage() {
-    this.store.dispatch({type: 'RANDOM'})
-   }
+   editEnd(id: number, end_price: number) {
+    console.log('edit end')
+    this.store.dispatch(EditEnd({id, end_price}))
+    }
 
    setTrends() {
      this.rowData.forEach(row => {
@@ -123,14 +132,9 @@ export class CommoditiesListComponent  {
           end_price: this.getRandom()
         }
          this.http.post('http://localhost:3000/commodities', newData)
-
-
-         //this.changeRandom()
        }, 250);
      
    }
-
-
 
   ngOnInit(): void {
     this.http.get('http://localhost:3000/commodities').subscribe((commodities: any) => {
@@ -138,7 +142,6 @@ export class CommoditiesListComponent  {
       this.setTrends()
       this.store.dispatch(Populate({commodities}))
     })
-    // this.changeRandom()
   }
 
 }

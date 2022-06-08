@@ -27,40 +27,47 @@ export const commoditiesListReducer = createReducer(
     ),
     on(EditStart, 
         (state, { id, start_price }) => {
-            console.log('id is',id,start_price)
-            console.log('state',{
+            console.log('new start_pricec',id,start_price)
+            console.log('row',{
+                id,
+                start_price,
+                end_price: state[id].end_price,
+                trend: start_price > state[id].end_price ? false : true
+            })
+            let newState = state
+            const end_price = state[id].end_price
+            return {
                 ...state,
                 [id]: {
                     id,
                     start_price,
-                    end_price: state[id].end_price,
-                    trend: start_price > state[id].end_price ? false : true
+                    end_price,
+                    trend: start_price > end_price ? false : true
                 }
-                })
-            let newState = state
-            const end_price = state[id].end_price
-            // newState[id] = {
-            //     id,
-            //     start_price,
-            //     end_price,
-            // }
-            return {
-        ...state,
-        [id]: {
-            id,
-            start_price,
-            end_price,
-            trend: start_price > end_price ? false : true
+            }
         }
-        }
-    }
-    
-    
     ),
     on(EditEnd, 
-        (state, { id, end_price }) => ({
-        ...state
-    })),
+        (state, { id, end_price }) => {
+            console.log('new end_price',end_price)
+            console.log('row',{
+                id,
+                start_price: state[id].start_price,
+                end_price,
+                trend: state[id].end_price > end_price ? false : true
+            })
+            let newState = state
+            const start_price = state[id].start_price
+            return {
+                ...state,
+                [id]: {
+                    id,
+                    start_price,
+                    end_price,
+                    trend: start_price > end_price ? false : true
+                }
+            }
+        }),
     on(Randomize, (state, {id, start_price, end_price}) => ({
         ...state
     }))

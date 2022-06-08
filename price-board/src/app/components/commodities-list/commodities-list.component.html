@@ -1,17 +1,17 @@
 
 
 <ag-grid-angular
-    style="width: 750px; height: 500px;" 
-    class="ag-theme-alpine"
-    [rowData]="rowData"
-    [columnDefs]="columnDefs"
-    
+    style='width: 750px; height: 500px;' 
+    class='ag-theme-alpine'
+    [rowData]='rowData'
+    [columnDefs]='columnDefs'
+    (onGridReady)='onGridReady($event)'
     (cellValueChanged)='onCellValueChanged($event)'
     
     (cellDoubleClicked)='onCellDoubleClicked($event)'>
 </ag-grid-angular>
 
-<!-- (cellValueChanged)='onCellValueChanged($event)' -->
+<!-- (cellValueChanged)='onCellValueCjkhanged($event)' -->
 <!-- (cellEditRequest)='onCellEditRequest($event)'-->
 <!--[onCellEditRequest]="onCellEditRequest"-->
 <!--[readOnlyEdit]="readOnlyEdit"-->
