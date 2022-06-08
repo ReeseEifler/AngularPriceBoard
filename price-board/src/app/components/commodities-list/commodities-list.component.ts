@@ -6,13 +6,6 @@ import { Commodity } from 'src/app/models/commodity.model'
 import { Populate, EditStart, EditEnd, Randomize } from 'src/app/actions/commodity.actions'
 import { HttpClient } from '@angular/common/http'
 
-
-interface BoardState {
-  message: string
-  commodities: Array<Commodity>
-  rowData: Array<any>
-}
-
 const trendCellClassRules: CellClassRules = {
   'positive': (params) => params.value === true,
   'negative': (params) => params.value === false
@@ -24,17 +17,12 @@ const trendCellClassRules: CellClassRules = {
   styleUrls: ['./commodities-list.component.css']
 })
 export class CommoditiesListComponent  {
-  commodities$: Observable<object>
   rowData$: Observable<any>
-  constructor(private store: Store<BoardState>, private http: HttpClient) {
-    this.commodities$ = this.store.select('commodities')
-    this.rowData$ = this.store.select(store => store.rowData)
+  constructor(private store: Store<any>, private http: HttpClient) {
+    this.rowData$ = this.store.select(store => store.commodities.rowData)
 
    }
 
-  private gridApi!: GridApi
-  clickedPrice: number = 0
-  commodities: any = {}/*[]*/
 
   rowData: any[] = []
   columnDefs: ColDef[] = [
@@ -51,9 +39,6 @@ export class CommoditiesListComponent  {
   },
     { headerName:'End Price', field:'end_price', editable: true,
     valueParser: params => Number(params.newValue),
-    // valueGetter: params => {
-    //   return params.data.start_price
-    // },
     valueSetter: params => {
       this.editEnd(params.data.id, params.newValue)
       return false
@@ -67,36 +52,6 @@ export class CommoditiesListComponent  {
       }
     },
   ]
-  // readOnlyEdit: boolean = true
-
-  onGridReady(event: any) {
-    console.log('event',event)
-  }
-
-  onCellDoubleClicked(event:any) {
-    console.log(event)
-    const field = event.colDef.field
-    if (field === 'start_price') {23
-      this.clickedPrice = event.data.start_price
-    }
-    else if (field === 'end_price') {
-      this.clickedPrice = event.data.end_price
-    }
-  }
-
-  onCellValueChanged(event: any) {
-    console.log('change value',event)
-    if (event.colDef.field === 'start_price') {
-      const num = event.data.start_price
-      console.log('start is',event.data.start_price)
-      // if (isNaN(num)) {
-      //   // revert to original value
-      //   console.log("revert to original value")
-      // } else this.editStart(event.data.id, event.data.start_price)
-    }else{
-      console.log('2nd is',event.data.end_price)
-    }
-  }
 
   setValue(id: string, value: number) {
     (document.querySelector(id) as any).value = value;

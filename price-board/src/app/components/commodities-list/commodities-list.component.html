@@ -3,15 +3,6 @@
 <ag-grid-angular
     style='width: 750px; height: 500px;' 
     class='ag-theme-alpine'
-    [rowData]='rowData'
-    [columnDefs]='columnDefs'
-    (onGridReady)='onGridReady($event)'
-    (cellValueChanged)='onCellValueChanged($event)'
-    
-    (cellDoubleClicked)='onCellDoubleClicked($event)'>
+    [rowData]='rowData$ | async'
+    [columnDefs]='columnDefs'>
 </ag-grid-angular>
-
-<!-- (cellValueChanged)='onCellValueCjkhanged($event)' -->
-<!-- (cellEditRequest)='onCellEditRequest($event)'-->
-<!--[onCellEditRequest]="onCellEditRequest"-->
-<!--[readOnlyEdit]="readOnlyEdit"-->
