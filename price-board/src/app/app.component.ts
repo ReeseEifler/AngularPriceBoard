@@ -1,13 +1,7 @@
-import { Component } from '@angular/core';
+import { Component } from '@angular/core'
 import { Store } from '@ngrx/store'
-
-import { Observable } from 'rxjs';
-import { Commodity } from './models/commodity.model'
+import { Observable } from 'rxjs'
 import * as CommodityActions from '../app/actions/commodity.actions'
-
-interface AppState {
-  commodity: Commodity
-}
 
 @Component({
   selector: 'app-root',

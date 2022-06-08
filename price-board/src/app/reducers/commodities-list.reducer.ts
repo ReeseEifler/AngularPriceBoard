@@ -1,8 +1,7 @@
 
 import { Action, createReducer, on } from '@ngrx/store'
-import { Commodity } from 'src/app/models/commodity.model'
 import * as CommodityActions from '../actions/commodity.actions'
-import { Populate, EditStart, EditEnd, Randomize } from '../actions/commodity.actions'
+import { Populate, EditStart, EditEnd, Randomize, UpdateRow } from '../actions/commodity.actions'
 
 const getVals = () => {
     const start = parseFloat((Math.random() * 100).toFixed(2))
@@ -28,6 +27,27 @@ export const commoditiesListReducer = createReducer(
                 ...state,
                 rowData: commodities
             }
+        }
+    ),
+    on(UpdateRow, 
+        (state, { id, start_price, end_price }) => {
+            let newRows = state.rowData.map((el:any) => {
+                if(el.id === id) {
+                    return {
+                        id,
+                        start_price,
+                        end_price,
+                        trend: start_price > end_price ?
+                         false : true
+                    }
+                }
+                return el
+            })
+            let newState = {
+                ...state,
+                rowData: newRows
+            }
+            return newState
         }
     ),
     on(EditStart, 

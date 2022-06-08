@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { CellClassRules, ColDef, Grid, GridApi, GridOptions, CellEditRequestEvent } from 'ag-grid-community'
 import { Store } from '@ngrx/store'
 import { Observable } from 'rxjs'
-import { Commodity } from 'src/app/models/commodity.model'
-import { Populate, EditStart, EditEnd, Randomize } from 'src/app/actions/commodity.actions'
+import { Populate, /*EditStart, EditEnd,*/ Randomize, UpdateRow } from 'src/app/actions/commodity.actions'
 import { HttpClient } from '@angular/common/http'
 
 const trendCellClassRules: CellClassRules = {
@@ -17,31 +16,26 @@ const trendCellClassRules: CellClassRules = {
   styleUrls: ['./commodities-list.component.css']
 })
 export class CommoditiesListComponent  {
-
   rowData$: Observable<any>
-  
+
   constructor(private store: Store<any>, private http: HttpClient) {
     this.rowData$ = this.store.select(store => store.commodities.rowData)
-
-   }
+  }
 
   rowData: any[] = []
   columnDefs: ColDef[] = [
     { headerName:'ID', field:'id' },
     { headerName:'Start Price', field:'start_price', editable: true, 
     valueParser: params => Number(params.newValue),
-    valueGetter: params => {
-      return params.data.start_price
-    },
     valueSetter: params => {
-      this.editStart(params.data.id, params.newValue)
+      this.updateRow(params.data.id, params.newValue, params.data.end_price)
       return false
     }
   },
     { headerName:'End Price', field:'end_price', editable: true,
     valueParser: params => Number(params.newValue),
     valueSetter: params => {
-      this.editEnd(params.data.id, params.newValue)
+      this.updateRow(params.data.id, params.data.start_price, params.newValue)
       return false
     } 
   },
@@ -62,23 +56,27 @@ export class CommoditiesListComponent  {
     return parseFloat((Math.random() * 100).toFixed(2))
   }
 
-   editStart(id: number, start_price: number) {
-     console.log('edit start')
-     this.store.dispatch(EditStart({id, start_price}))
-    }
+  // editStart(id: number, start_price: number) {
+  //   this.store.dispatch(EditStart({id, start_price}))
+  // }
 
-   editEnd(id: number, end_price: number) {
-    console.log('edit end')
-    this.store.dispatch(EditEnd({id, end_price}))
-    }
+  // editEnd(id: number, end_price: number) {
+  // this.store.dispatch(EditEnd({id, end_price}))
+  // }
 
-   setTrends() {
-     this.rowData.forEach(row => {
-       row["trend"] = row.start_price > row.end_price ? false : true
-     })
-   }
+  setTrends() {
+    this.rowData.forEach(row => {
+      row["trend"] = row.start_price > row.end_price ? false : true
+    })
+  }
 
-   async changeRandom () {
+
+  updateRow(id: number, start_price: number, end_price: number) {
+    this.store.dispatch(UpdateRow({id, start_price, end_price}))
+  }
+
+
+  async changeRandom () {
     setTimeout(() => {
       let newData = {
         id: Math.floor(Math.random() * 250),
