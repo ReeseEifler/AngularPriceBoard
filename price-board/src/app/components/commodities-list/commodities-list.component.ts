@@ -75,11 +75,8 @@ export class CommoditiesListComponent  {
         start_price: this.getRandom(),
         end_price: this.getRandom()
       }
-      console.log(newData)
       this.store.dispatch(UpdateRow(newData))
       this.changeRandom()
-
-      // this.http.post('http://localhost:3000/commodities', newData)
     }, 250);
   }
 
