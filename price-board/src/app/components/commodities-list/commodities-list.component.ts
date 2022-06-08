@@ -17,12 +17,13 @@ const trendCellClassRules: CellClassRules = {
   styleUrls: ['./commodities-list.component.css']
 })
 export class CommoditiesListComponent  {
+
   rowData$: Observable<any>
+  
   constructor(private store: Store<any>, private http: HttpClient) {
     this.rowData$ = this.store.select(store => store.commodities.rowData)
 
    }
-
 
   rowData: any[] = []
   columnDefs: ColDef[] = [
@@ -61,8 +62,6 @@ export class CommoditiesListComponent  {
     return parseFloat((Math.random() * 100).toFixed(2))
   }
 
-  
-
    editStart(id: number, start_price: number) {
      console.log('edit start')
      this.store.dispatch(EditStart({id, start_price}))
@@ -80,20 +79,18 @@ export class CommoditiesListComponent  {
    }
 
    async changeRandom () {
-    const rand = Math.floor(Math.random() * 250)
+    setTimeout(() => {
+      let newData = {
+        id: Math.floor(Math.random() * 250),
+        start_price: this.getRandom(),
+        end_price: this.getRandom()
+      }
+      this.store.dispatch(Randomize(newData))
 
-      setTimeout(() => {
-        console.log('change random', this.rowData, rand)
-        let newData = this.rowData
-        newData[rand] = {
-          id: rand,
-          startPrice: this.getRandom(),
-          end_price: this.getRandom()
-        }
-         this.http.post('http://localhost:3000/commodities', newData)
-       }, 250);
-     
-   }
+
+      // this.http.post('http://localhost:3000/commodities', newData)
+    }, 250);
+  }
 
   ngOnInit(): void {
     this.http.get('http://localhost:3000/commodities').subscribe((commodities: any) => {
