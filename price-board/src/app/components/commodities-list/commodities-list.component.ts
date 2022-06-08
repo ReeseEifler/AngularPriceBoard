@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { CellClassRules, ColDef, Grid, GridApi, GridOptions, CellEditRequestEvent } from 'ag-grid-community'
 import { Store } from '@ngrx/store'
 import { Observable } from 'rxjs'
-import { Populate, /*EditStart, EditEnd,*/ Randomize, UpdateRow } from 'src/app/actions/commodity.actions'
+import { Populate, Randomize, UpdateRow } from 'src/app/actions/commodity.actions'
 import { HttpClient } from '@angular/common/http'
 
 const trendCellClassRules: CellClassRules = {
@@ -56,14 +56,6 @@ export class CommoditiesListComponent  {
     return parseFloat((Math.random() * 100).toFixed(2))
   }
 
-  // editStart(id: number, start_price: number) {
-  //   this.store.dispatch(EditStart({id, start_price}))
-  // }
-
-  // editEnd(id: number, end_price: number) {
-  // this.store.dispatch(EditEnd({id, end_price}))
-  // }
-
   setTrends() {
     this.rowData.forEach(row => {
       row["trend"] = row.start_price > row.end_price ? false : true
@@ -83,8 +75,9 @@ export class CommoditiesListComponent  {
         start_price: this.getRandom(),
         end_price: this.getRandom()
       }
-      this.store.dispatch(Randomize(newData))
-
+      console.log(newData)
+      this.store.dispatch(UpdateRow(newData))
+      this.changeRandom()
 
       // this.http.post('http://localhost:3000/commodities', newData)
     }, 250);
@@ -95,7 +88,7 @@ export class CommoditiesListComponent  {
       this.rowData = commodities
       this.setTrends()
       this.store.dispatch(Populate({commodities}))
+      this.changeRandom()
     })
   }
-
 }
