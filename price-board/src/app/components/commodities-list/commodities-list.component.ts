@@ -22,6 +22,8 @@ export class CommoditiesListComponent  {
     this.rowData$ = this.store.select(store => store.commodities.rowData)
   }
 
+  editing: boolean = false
+
   rowData: any[] = []
   columnDefs: ColDef[] = [
     { headerName:'ID', field:'id' },
@@ -29,6 +31,8 @@ export class CommoditiesListComponent  {
     valueParser: params => Number(params.newValue),
     valueSetter: params => {
       this.updateRow(params.data.id, params.newValue, params.data.end_price)
+      this.editing = false
+      this.changeRandom()
       return false
     }
   },
@@ -36,6 +40,8 @@ export class CommoditiesListComponent  {
     valueParser: params => Number(params.newValue),
     valueSetter: params => {
       this.updateRow(params.data.id, params.data.start_price, params.newValue)
+      this.editing = false
+    this.changeRandom()
       return false
     } 
   },
@@ -56,17 +62,25 @@ export class CommoditiesListComponent  {
     return parseFloat((Math.random() * 100).toFixed(2))
   }
 
+  onCellClicked() {
+    this.editing = true
+  }
+
+  onCellValueChanged() {
+    console.log('CHANGE')
+    this.editing = false
+    this.changeRandom()
+  }
+
   setTrends() {
     this.rowData.forEach(row => {
       row["trend"] = row.start_price > row.end_price ? false : true
     })
   }
 
-
   updateRow(id: number, start_price: number, end_price: number) {
     this.store.dispatch(UpdateRow({id, start_price, end_price}))
   }
-
 
   async changeRandom () {
     setTimeout(() => {
@@ -76,7 +90,7 @@ export class CommoditiesListComponent  {
         end_price: this.getRandom()
       }
       this.store.dispatch(UpdateRow(newData))
-      this.changeRandom()
+      if (!this.editing) this.changeRandom()
     }, 250);
   }
 

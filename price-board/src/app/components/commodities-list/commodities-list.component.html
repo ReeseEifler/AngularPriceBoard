@@ -4,5 +4,7 @@
     style='width: 850px; height: 10600px;' 
     class='ag-theme-alpine'
     [rowData]='rowData$ | async'
-    [columnDefs]='columnDefs'>
+    [columnDefs]='columnDefs'
+    (cellClicked)='onCellClicked()'
+    (cellValueChanged)='onCellValueChanged()'>
 </ag-grid-angular>
