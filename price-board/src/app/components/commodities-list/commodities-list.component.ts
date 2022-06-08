@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http'
 interface BoardState {
   message: string
   commodities: Array<Commodity>
+  rowData: Array<any>
 }
 
 const trendCellClassRules: CellClassRules = {
@@ -23,6 +24,14 @@ const trendCellClassRules: CellClassRules = {
   styleUrls: ['./commodities-list.component.css']
 })
 export class CommoditiesListComponent  {
+  commodities$: Observable<object>
+  rowData$: Observable<any>
+  constructor(private store: Store<BoardState>, private http: HttpClient) {
+    this.commodities$ = this.store.select('commodities')
+    this.rowData$ = this.store.select(store => store.rowData)
+
+   }
+
   private gridApi!: GridApi
   clickedPrice: number = 0
   commodities: any = {}/*[]*/
@@ -33,7 +42,6 @@ export class CommoditiesListComponent  {
     { headerName:'Start Price', field:'start_price', editable: true, 
     valueParser: params => Number(params.newValue),
     valueGetter: params => {
-      console.log(params)
       return params.data.start_price
     },
     valueSetter: params => {
@@ -98,11 +106,7 @@ export class CommoditiesListComponent  {
     return parseFloat((Math.random() * 100).toFixed(2))
   }
 
-  commodities$: Observable<object>
   
-  constructor(private store: Store<BoardState>, private http: HttpClient) {
-    this.commodities$ = this.store.select('commodities')
-   }
 
    editStart(id: number, start_price: number) {
      console.log('edit start')

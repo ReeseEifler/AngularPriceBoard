@@ -9,7 +9,7 @@ export const POPULATE = '[Commodity] Populate'
 
 export const Populate = createAction(
     POPULATE,
-    props<{commodities: Array<Commodity>}>()
+    props<{commodities: Array<any>}>()
 )
 
 export const EditStart = createAction(

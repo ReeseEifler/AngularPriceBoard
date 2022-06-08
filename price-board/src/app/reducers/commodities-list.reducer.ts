@@ -14,20 +14,25 @@ const getVals = () => {
     }
 }
 
-const defaultState: Array<Commodity> = []
+const initialState: any = {
+    rowData: []
+}
 
 
 export const commoditiesListReducer = createReducer(
-    defaultState,
+    initialState,
     on(Populate,
         (state, {commodities}) => {
-            console.log('populate with', {...commodities})
-            return {...commodities}
+            console.log('populate with', commodities)
+            return {
+                ...state,
+                rowData: commodities
+            }
         }
     ),
     on(EditStart, 
         (state, { id, start_price }) => {
-            console.log('new start_pricec',id,start_price)
+            console.log('new',id,start_price)
             console.log('row',{
                 id,
                 start_price,
